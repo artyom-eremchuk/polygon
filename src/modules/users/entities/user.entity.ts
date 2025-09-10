@@ -1,13 +1,20 @@
 import { Entity, Property } from '@mikro-orm/core';
-import { BaseEntity } from 'src/common/entities/base.entity';
+import { BaseEntity } from '../../../common/entities/base.entity';
+import { UserRepository } from '../repositories/user.repository';
 
-@Entity()
+@Entity({ tableName: 'users', repository: () => UserRepository })
 export class UserEntity extends BaseEntity {
   @Property()
-  name!: string;
+  firstName!: string;
+
+  @Property()
+  lastName!: string;
 
   @Property()
   email!: string;
+
+  @Property()
+  phoneNumber!: string;
 
   @Property({ default: 'now()' })
   createdAt = new Date();

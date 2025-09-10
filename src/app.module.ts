@@ -1,13 +1,27 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { MikroORM } from '@mikro-orm/postgresql';
+import { getDatabaseModule } from './config/db/db';
+import { MigrationService } from './config/db/migration.service';
+import { Envs } from './config/envs/envs';
 import { UserModule } from './modules/users/entities/user.module';
-import dbConfig from './configs/dbConfig';
+import { OrmManager } from './config/db/mikroorm.manager';
 
 @Module({
-  imports: [MikroOrmModule.forRoot(dbConfig), UserModule],
+  imports: [getDatabaseModule(), UserModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [MigrationService, AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(
+    private readonly migrationService: MigrationService,
+    orm: MikroORM,
+  ) {
+    OrmManager.setManager(orm.em);
+  }
+
+  async onApplicationBootstrap() {
+    if (Envs.db.migrationRun) await this.migrationService.migrate();
+  }
+}
