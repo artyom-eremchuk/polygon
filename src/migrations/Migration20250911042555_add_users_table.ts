@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20250911042555_init extends Migration {
+export class Migration20250911042555_add_users_table extends Migration {
   up(): void {
     this.addSql(`
       create table if not exists "users" (
@@ -8,6 +8,7 @@ export class Migration20250911042555_init extends Migration {
         first_name text not null,
         last_name text not null,
         birth_date date not null,
+        email text null,
         created_at timestamptz not null default now(),
         updated_at timestamptz null,
         deleted_at timestamptz null
@@ -18,20 +19,21 @@ export class Migration20250911042555_init extends Migration {
       insert into "users" (
         first_name, 
         last_name, 
-        birth_date, 
+        birth_date,
+        email,
         created_at
       ) 
       values 
-        ('James', 'Smith', '1978-03-15', now()),
-        ('Mary', 'Johnson', '1965-07-22', now()),
-        ('John', 'Williams', '1999-11-08', now()),
-        ('Patricia', 'Brown', '1982-01-30', now()),
-        ('Robert', 'Jones', '2001-05-17', now()),
-        ('Jennifer', 'Garcia', '1973-09-14', now()),
-        ('Michael', 'Miller', '1995-12-03', now()),
-        ('Linda', 'Davis', '1968-04-25', now()),
-        ('William', 'Rodriguez', '1989-08-19', now()),
-        ('Elizabeth', 'Martinez', '2005-06-11', now())
+        ('Иван', 'Иванов', '1978-03-15', 'ivan.ivanov@example.com', now()),
+        ('Мария', 'Петрова', '1965-07-22', 'maria.petrova@example.com', now()),
+        ('Сергей', 'Смирнов', '1999-11-08', null, now()),
+        ('Ольга', 'Кузнецова', '1982-01-30', 'olga.kuznetsova@example.com', now()),
+        ('Алексей', 'Попов', '2001-05-17', null, now()),
+        ('Елена', 'Васильева', '1973-09-14', 'elena.vasileva@example.com', now()),
+        ('Дмитрий', 'Соколов', '1995-12-03', 'dmitry.sokolov@example.com', now()),
+        ('Наталья', 'Михайлова', '1968-04-25', 'natalya.mikhailova@example.com', now()),
+        ('Андрей', 'Новиков', '1989-08-19', null, now()),
+        ('Анна', 'Федорова', '2005-06-11', 'anna.fedorova@example.com', now())
     `);
 
     this.addSql(`
